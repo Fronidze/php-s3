@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: .docker/nginx/Dockerfile
+    volumes:
+      - ./app:/app:delegated
+    ports:
+      - "1988:80"
+  php:
+    build:
+      context: .
+      dockerfile: .docker/php/Dockerfile
+    container_name: php-s3.php
+    volumes:
+      - ./.docker/php/php.ini:/usr/local/etc/php/php.ini:delegated
+      - ./app:/app:delegated
