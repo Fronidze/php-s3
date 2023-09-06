@@ -1,5 +1,9 @@
 version: '3.8'
 
+networks:
+  markelov:
+    external: true
+
 services:
   nginx:
     build:
@@ -7,13 +11,23 @@ services:
       dockerfile: .docker/nginx/Dockerfile
     volumes:
       - ./app:/app:delegated
+    networks:
+      default:
+      markelov:
     ports:
       - "1988:80"
+    command: ["nginx-debug", "-g", "daemon off;"]
   php:
     build:
       context: .
       dockerfile: .docker/php/Dockerfile
     container_name: php-s3.php
+    extra_hosts:
+      - "local.hotbox.space:172.18.0.2"
+      - "fronidze.local.hotbox.space:172.18.0.2"
+    networks:
+      default:
+      markelov:
     volumes:
       - ./.docker/php/php.ini:/usr/local/etc/php/php.ini:delegated
       - ./app:/app:delegated
