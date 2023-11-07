@@ -41,18 +41,14 @@ class MainController extends Controller
 
             $headers['host'] = $config->getEndpointUrl();
             ksort($headers);
+
             $request = new \GuzzleHttp\Psr7\Request(
-                $request->getMethod(), 
-                $request->getUri(), 
-                headers: $headers, 
+                $request->getMethod(),
+                $request->getRequestUri(),
+                headers: $headers,
                 body: $request->getContent()
             );
-            echo "<pre>"; print_r($request->getHeaders()); echo "</pre>"; die("Debug Fronidze");
-//            foreach ($request->getHeaders() as $key => $value) {
-//                if ($key === 'host') {
-//                    echo "<pre>"; print_r($value); echo "</pre>"; die("Debug Fronidze");
-//                }
-//            }
+
 //            $signer = $isAuthVersion4 ?
 //                new \App\Helpers\RequestSigner($request, $region, $accessKey, $secretKey) :
 //                new \App\Helpers\RequestSignerVersionTwo($request, $region, $accessKey, $secretKey);
@@ -67,7 +63,7 @@ class MainController extends Controller
             $request = $signer->signRequest();
             $client = new \GuzzleHttp\Client(['base_uri' => sprintf('http://%s', $config->getEndpointUrl())]);
             try {
-                $response = $client->send($request, ['debug' => true]);
+                $response = $client->send($request, ['debug' => $isDebug]);
                 return response($response->getBody()->getContents(), $response->getStatusCode(), $response->getHeaders());
             } catch (\GuzzleHttp\Exception\RequestException $exception) {
                 $response = $exception->getResponse();
