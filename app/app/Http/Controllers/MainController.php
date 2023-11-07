@@ -57,13 +57,14 @@ class MainController extends Controller
                 request: $request,
                 region: $config->getRegion(),
                 accessKey: $config->getAccessKey(),
-                secretKey: $config->getSecretKey()
+                secretKey: $config->getSecretKey(),
+                isDebug: $isDebug
             );
 
             $request = $signer->signRequest();
             $client = new \GuzzleHttp\Client(['base_uri' => sprintf('http://%s', $config->getEndpointUrl())]);
             try {
-                $response = $client->send($request, ['debug' => $isDebug]);
+                $response = $client->send($request, ['debug' => false]);
                 return response($response->getBody()->getContents(), $response->getStatusCode(), $response->getHeaders());
             } catch (\GuzzleHttp\Exception\RequestException $exception) {
                 $response = $exception->getResponse();

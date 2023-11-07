@@ -14,9 +14,10 @@ class RequestSigner
 
     public function __construct(
         protected MessageInterface $request,
-        protected string  $region,
-        protected string  $accessKey,
-        protected string  $secretKey
+        protected string           $region,
+        protected string           $accessKey,
+        protected string           $secretKey,
+        protected bool             $isDebug
     )
     {
         $this->datetime = gmdate(static::FULL_DATETIME_FORMAT);
@@ -24,7 +25,8 @@ class RequestSigner
         $this->request = $this->request->withHeader('x-amz-content-sha256', $this->hashedPayload());
     }
 
-    private function accessKey():string {
+    private function accessKey(): string
+    {
         return $this->accessKey;
     }
 
@@ -152,7 +154,12 @@ class RequestSigner
 
     public function stringToSign(): string
     {
-//        echo $this->canonicalRequest() . "\n"; die();
+        if ($this->isDebug === true) {
+            echo sprintf(
+                "canonicalRequest:\n%s\n",
+                $this->canonicalRequest()
+            );
+        }
         return sprintf(
             "%s\n%s\n%s\n%s",
             "AWS4-HMAC-SHA256",
@@ -164,7 +171,7 @@ class RequestSigner
 
     public function signedKey(): string
     {
-        $dateKey = hash_hmac('sha256', $this->shortDate(),"AWS4".$this->secretKey(), true);
+        $dateKey = hash_hmac('sha256', $this->shortDate(), "AWS4" . $this->secretKey(), true);
         $dateRegionKey = hash_hmac('sha256', $this->region(), $dateKey, true);
         $dateRegionServiceKey = hash_hmac('sha256', $this->serviceName(), $dateRegionKey, true);
         return hash_hmac('sha256', 'aws4_request', $dateRegionServiceKey, true);
@@ -175,7 +182,8 @@ class RequestSigner
         return hash_hmac('sha256', $this->stringToSign(), $this->signedKey());
     }
 
-    public function authorizationHeader(): string {
+    public function authorizationHeader(): string
+    {
         return sprintf(
             "AWS4-HMAC-SHA256 Credential=%s, SignedHeaders=%s, Signature=%s",
             "{$this->accessKey()}/{$this->scope()}",
