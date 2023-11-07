@@ -7,8 +7,6 @@ services:
       dockerfile: .docker/nginx/Dockerfile
     volumes:
       - ./app:/app:delegated
-    ports:
-      - "0.0.0.0:80:80"
   php:
     build:
       context: .
@@ -17,3 +15,4 @@ services:
     volumes:
       - ./.docker/php/php.ini:/usr/local/etc/php/php.ini:delegated
       - ./app:/app:delegated
+      - ./config.yml:/etc/signer/config.yml

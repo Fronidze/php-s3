@@ -23,8 +23,13 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->reportable(function (Throwable $exception) {
+            echo "<pre>"; print_r($exception->getMessage()); echo "</pre>"; die("Debug Fronidze");
+            return response()->json([
+                'status' => false,
+                'code' => 500,
+                'message' => $exception->getMessage()
+            ]);
         });
     }
 }

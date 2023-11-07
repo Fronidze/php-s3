@@ -2,3 +2,4 @@
 /app/vendor/
 /request/
 /docker-compose.override.yml
+/config.yml

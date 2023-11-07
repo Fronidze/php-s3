@@ -96,7 +96,7 @@ class RequestSignerVersionTwo
             'acl', 'cors', 'delete', 'lifecycle', 'location', 'logging',
             'notification', 'partNumber', 'policy', 'requestPayment', 'response-cache-control', 'response-content-disposition',
             'response-content-encoding', 'response-content-language', 'response-content-type', 'response-expires', 'restore',
-            'tagging', 'torrent', 'uploadId', 'uploads', 'versionId', 'versioning', 'versions', 'website'
+            'tagging', 'torrent', 'uploadId', 'uploads', 'versionId', 'versioning', 'versions', 'website', 'legal-hold'
         ];
     }
     public function canonicalResource(): string
@@ -161,6 +161,7 @@ class RequestSignerVersionTwo
 
     public function signature(): string
     {
+        echo $this->stringToSign() . "\n";
         return base64_encode(hash_hmac('sha1', $this->stringToSign(), $this->signedKey(), true));
     }
 
