@@ -19,7 +19,14 @@ class MainController extends Controller
             $config = new RequestConfig($request);
             $isDebug = false;
 
-            $excludeHeaders = ['x-profile', 'host', 'x-real-ip'];
+            $excludeHeaders = [
+                'x-profile',
+                'host',
+                'x-real-ip',
+                'user-agent',
+                'accept',
+                'accept-encoding'
+            ];
             $headers = [];
 
             foreach ($request->headers as $key => $value) {
