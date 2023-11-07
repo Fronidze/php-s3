@@ -19,7 +19,7 @@ class MainController extends Controller
             $config = new RequestConfig($request);
             $isDebug = false;
 
-            $excludeHeaders = ['x-profile', 'host'];
+            $excludeHeaders = ['x-profile', 'host', 'x-real-ip'];
             $headers = [];
 
             foreach ($request->headers as $key => $value) {
@@ -27,6 +27,10 @@ class MainController extends Controller
 
                 if ($key === 'x-debug') {
                     $isDebug = true;
+                    continue;
+                }
+
+                if (str_starts_with('x-forwarded', $key) === true) {
                     continue;
                 }
 
