@@ -24,7 +24,6 @@ class MainController extends Controller
                 'host',
                 'x-real-ip',
                 'user-agent',
-                'accept',
                 'accept-encoding'
             ];
             $headers = [];
