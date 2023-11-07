@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MainController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,5 +15,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::any('/{any}', [\App\Http\Controllers\MainController::class, 'proxy'])
+Route::any('/{any}', [MainController::class, 'proxy'])
     ->where('any', '.*');

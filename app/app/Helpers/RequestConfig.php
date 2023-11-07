@@ -81,17 +81,21 @@ class RequestConfig
 
     public function getAccessKey(): ?string
     {
-        return $this->request->header('x-access-key');
+        return $this->credentials->getAccessKey();
     }
 
     public function getSecretKey(): ?string
     {
-        return $this->request->header('x-secret-key');
+        return $this->credentials->getSecretKey();
     }
 
     public function getEndpointUrl(): ?string
     {
-        return $this->request->header('x-endpoint-url');
+        return $this->credentials->getEndpointUrl();
+    }
+
+    public function getRegion(): ?string {
+        return $this->credentials->getRegion();
     }
 
 }

@@ -37,6 +37,10 @@ class CredentialsEntity
         return $this;
     }
 
+    public function getAccessKey(): ?string {
+        return $this->accessKey;
+    }
+
     public function setSecretKey(?string $secretKey): self
     {
         if ($secretKey === null) {
@@ -45,6 +49,10 @@ class CredentialsEntity
 
         $this->secretKey = $secretKey;
         return $this;
+    }
+
+    public function getSecretKey(): ?string {
+        return $this->secretKey;
     }
 
     public function setEndpointUrl(?string $endpointUrl): self
@@ -57,6 +65,10 @@ class CredentialsEntity
         return $this;
     }
 
+    public function getEndpointUrl(): ?string {
+        return $this->endpointUrl;
+    }
+
     public function setRegion(?string $region): self
     {
         if ($region === null) {
@@ -65,6 +77,10 @@ class CredentialsEntity
 
         $this->region = $region;
         return $this;
+    }
+
+    public function getRegion(): ?string {
+        return $this->region;
     }
 
 }
