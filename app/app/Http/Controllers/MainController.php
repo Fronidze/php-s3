@@ -30,7 +30,7 @@ class MainController extends Controller
                     continue;
                 }
 
-                if (str_starts_with('x-forwarded', $key) === true) {
+                if (str_starts_with($key, 'x-forwarded') === true) {
                     continue;
                 }
 
@@ -84,5 +84,6 @@ class MainController extends Controller
                 $exception->getMessage()
             ));
         }
+        return response("Sometimes i think here will be response");
     }
 }
