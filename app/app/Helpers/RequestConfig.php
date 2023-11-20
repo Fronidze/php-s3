@@ -12,7 +12,7 @@ class RequestConfig
 {
     const DEFAULT_CONFIG_PATH = '/etc/signer/config.yml';
     private CredentialsEntity $credentials;
-    private string $signVersion;
+    private ?string $signVersion = null;
 
     public function __construct(
         private readonly Request $request
