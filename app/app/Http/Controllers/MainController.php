@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\Custom\RuntimeException;
 use App\Helpers\RequestConfig;
 use App\Helpers\RequestSigner;
+use App\Helpers\RequestSignerVersionTwo;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 
 class MainController extends Controller
 {
@@ -16,8 +15,8 @@ class MainController extends Controller
     ) {
         try {
 
-            $config = new RequestConfig($request);
             $isDebug = false;
+            $config = new RequestConfig($request);
 
             $excludeHeaders = [
                 'x-profile',
@@ -58,17 +57,23 @@ class MainController extends Controller
                 body: $request->getContent()
             );
 
-//            $signer = $isAuthVersion4 ?
-//                new \App\Helpers\RequestSigner($request, $region, $accessKey, $secretKey) :
-//                new \App\Helpers\RequestSignerVersionTwo($request, $region, $accessKey, $secretKey);
-
-            $signer = new RequestSigner(
-                request: $request,
-                region: $config->getRegion(),
-                accessKey: $config->getAccessKey(),
-                secretKey: $config->getSecretKey(),
-                isDebug: $isDebug
-            );
+            if ($config->getSignVersion() === 'v2') {
+                $signer = new RequestSignerVersionTwo(
+                    request: $request,
+                    region: $config->getRegion(),
+                    accessKey: $config->getAccessKey(),
+                    secretKey: $config->getSecretKey(),
+                    isDebug: $isDebug
+                );
+            } else {
+                $signer = new RequestSigner(
+                    request: $request,
+                    region: $config->getRegion(),
+                    accessKey: $config->getAccessKey(),
+                    secretKey: $config->getSecretKey(),
+                    isDebug: $isDebug
+                );
+            }
 
             $request = $signer->signRequest();
             $client = new \GuzzleHttp\Client(['base_uri' => sprintf('http://%s', $config->getEndpointUrl())]);

@@ -16,7 +16,8 @@ class RequestSignerVersionTwo
         protected MessageInterface $request,
         protected string           $region,
         protected string           $accessKey,
-        protected string           $secretKey
+        protected string           $secretKey,
+        protected bool             $isDebug
     )
     {
         $this->datetime = gmdate(static::FULL_DATETIME_FORMAT);
@@ -91,7 +92,9 @@ class RequestSignerVersionTwo
 
         return implode('.', array_slice($explodeHost, 0, $offset));
     }
-    protected function availableResourceForSign(): array {
+
+    protected function availableResourceForSign(): array
+    {
         return [
             'acl', 'cors', 'delete', 'lifecycle', 'location', 'logging',
             'notification', 'partNumber', 'policy', 'requestPayment', 'response-cache-control', 'response-content-disposition',
@@ -99,6 +102,7 @@ class RequestSignerVersionTwo
             'tagging', 'torrent', 'uploadId', 'uploads', 'versionId', 'versioning', 'versions', 'website', 'legal-hold'
         ];
     }
+
     public function canonicalResource(): string
     {
         $bucketName = $this->parseBucketName();
@@ -161,7 +165,9 @@ class RequestSignerVersionTwo
 
     public function signature(): string
     {
-        echo $this->stringToSign() . "\n";
+        if ($this->isDebug === true) {
+            echo sprintf("canonicalRequest:\n\n%s\n", $this->canonicalRequest());
+        }
         return base64_encode(hash_hmac('sha1', $this->stringToSign(), $this->signedKey(), true));
     }
 

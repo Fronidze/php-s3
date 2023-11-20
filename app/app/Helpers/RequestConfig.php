@@ -12,16 +12,23 @@ class RequestConfig
 {
     const DEFAULT_CONFIG_PATH = '/etc/signer/config.yml';
     private CredentialsEntity $credentials;
+    private string $signVersion;
 
     public function __construct(
         private readonly Request $request
-    )
-    {
-        $this->credentials = $this->parseConfig($this->readConfigFile());
+    ) {
+        $config = $this->readConfigFile();
+        $this->credentials = $this->parseConfig($config);
+
+        $signVersion = Arr::get($config,'version', 'v4');
+        if (in_array($signVersion, ['v2', 'v4']) === false) {
+            $signVersion = 'v4';
+        }
+        $this->signVersion = $signVersion;
     }
 
-    protected function getDefaultVersionAuth(): string {
-        return 'v4';
+    public function getSignVersion(): string {
+        return $this->signVersion;
     }
 
     private function parseConfig(
@@ -47,7 +54,7 @@ class RequestConfig
 
         return (new CredentialsEntity())
             ->setEndpointUrl($profileEntity?->endpointUrl ?? null)
-            ->setVersionAuth(Arr::get($content, 'version', $this->getDefaultVersionAuth()))
+            ->setVersionAuth(Arr::get($content, 'version', $this->getSignVersion()))
             ->setAccessKey($profileEntity?->accessKey ?? null)
             ->setSecretKey($profileEntity?->secretKey ?? null)
             ->setRegion($profileEntity?->region)
