@@ -12,7 +12,7 @@ class RequestConfig
 {
     const DEFAULT_CONFIG_PATH = '/etc/signer/config.yml';
     private CredentialsEntity $credentials;
-    private ?string $signVersion = null;
+    private string $signVersion = 'v4';
 
     public function __construct(
         private readonly Request $request
@@ -24,6 +24,7 @@ class RequestConfig
         if (in_array($signVersion, ['v2', 'v4']) === false) {
             $signVersion = 'v4';
         }
+        echo sprintf("set sign version is: %s", $signVersion);
         $this->signVersion = $signVersion;
     }
 
